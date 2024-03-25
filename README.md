@@ -21,7 +21,7 @@ VSCodeで一度でも開いたGitリポジトリを開けば、100M以上のフ�
 すでに「pre-commit」ファイルが存在する場合は、何もしない
 
 - pre-commit が存在しない場合  
-以下の内容で「.git/hooks/pre-commit」というファイルを作成します。
+以下の内容で「.git/hooks/pre-commit」というファイルを作成
 
 ```bash
 #!/bin/sh
