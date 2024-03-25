@@ -14,7 +14,7 @@ VSCodeで一度でも開いたGitリポジトリを開けば、100M以上のフ�
 ### gitリポジトリなのかどうなのかの判定
 「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
 
-### LFS (Github Large File Storage) なリポジトリなのかどうか
+### LFS (Github Large File Storage) リポジトリなのかどうなのかの判定
 .git/hooks 以下に「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する場合は、何もしない
 
 ### pre-commit が既に存在するかどうかの判定
