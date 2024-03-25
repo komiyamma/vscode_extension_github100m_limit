@@ -31,3 +31,12 @@ for file in $(git diff --cached --name-only); do
 done
 
 ```
+
+## LFS (Github Large File Storage) について
+- vscodeで該当のディレクトリを開くより先に、LFSのリポジトリだった場合は、上記、  
+「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する、に該当するため何もしませんが、
+- 通常のリポジトリを途中でLFSへと移行した場合、あるいはvscodeで先にディレクトリを開いた後で、LFSへと移行した場合は、
+  「*pre-commit*」の中身を見て、上記内容であれば、*削除*してください。
+- LFSリポジトリであれば、「post-checkout」「post-commit」「post-merge」「pre-push」が存在しますので、
+  一度削除されれば、該当のLFSリポジトリに「pre-commit」が作成されることはありません。
+  
