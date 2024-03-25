@@ -13,6 +13,8 @@ VScodeで一度でも開いたGitリポジトリであれば、.git/hooks/pre-co
 -. とても単純で、「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
   - 存在すれば、次に同様に「現在開いているフォルダ」の「直下」に「.git/hooks/pre-commit」というファイルがあるかどうかチェック
     - すでに「pre-commit」ファイルが存在する場合は、何もしません。
+    - すでに「post-checkout」「post-commit」「post-merge」「pre-push」の４つのファイルが存在する場合は、何もしません。  
+      - (ほぼ間違いなくLFS (Github Large File Storage) が使われていると思われるため)
     - 「pre-commit」ファイルが存在しなければ、以下の内容で「.git/hooks/pre-commit」というファイルを作成します。
 
 ```bash
