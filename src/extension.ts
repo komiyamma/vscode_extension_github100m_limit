@@ -68,7 +68,7 @@ function createPreCommit() {
 
 # Check if any file being committed exceeds 100MB
 if [ -f .git/hooks/post-checkout ] && [ -f .git/hooks/post-commit ] && [ -f .git/hooks/post-merge ] && [ -f .git/hooks/pre-push ]; then
-    ;
+    limit=999999999 # no use
 else
     limit=104857600 # 100MB in bytes
     for file in $(git diff --cached --name-only); do
