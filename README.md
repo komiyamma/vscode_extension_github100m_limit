@@ -11,16 +11,16 @@ VSCodeで一度でも開いたGitリポジトリを開けば、100M以上のフ�
 ## 挙動内容
 とても単純で
 
-- gitリポジトリなのかどうなのかの判定
+- gitリポジトリなのかどうなのかの判定  
 「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
 
-- LFS (Github Large File Storage) リポジトリなのかどうなのかの判定
+- LFS (Github Large File Storage) リポジトリなのかどうなのかの判定  
 .git/hooks 以下に「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する場合は、何もしない
 
-- pre-commit が既に存在するかどうかの判定
+- pre-commit が既に存在するかどうかの判定  
 すでに「pre-commit」ファイルが存在する場合は、何もしない
 
-- pre-commit が存在しない場合
+- pre-commit が存在しない場合  
 以下の内容で「.git/hooks/pre-commit」というファイルを作成します。
 
 ```bash
