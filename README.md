@@ -20,15 +20,18 @@ VScodeで一度でも開いたGitリポジトリであれば、.git/hooks/pre-co
 ```bash
 #!/bin/sh
 
-# Check if any file being committed exceeds 100MB
-limit=104857600 # 100MB in bytes
-for file in $(git diff --cached --name-only); do
-    file_size=$(stat -c %s "$file")
-    if [ $file_size -gt $limit ]; then
-        echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-        exit 1
-    fi
-done
+if [ -f .git/hooks/post-checkout ] && [ -f .git/hooks/post-commit ] && [ -f .git/hooks/post-merge ] && [ -f .git/hooks/pre-push ]; then
+    ;
+else
+    limit=104857600 # 100MB in bytes
+    for file in $(git diff --cached --name-only); do
+        file_size=$(stat -c %s "$file")
+        if [ $file_size -gt $limit ]; then
+            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+            exit 1
+        fi
+    done
+fi
 
 ```
 
