@@ -40,3 +40,24 @@ else
 fi
 
 ```
+
+## マーケットプレイス
+[ithub100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
+
+## Change Log
+
+## 1.3.0
+
+アイコン作成
+
+## 1.2.0
+
+Readme.mdで改行されていなかっため改修
+
+## 1.1.0
+
+マーケットプレイスへの公開版
+
+## 1.1.0
+
+試験的な初版
