@@ -1,7 +1,6 @@
-# github100mbyteslimithook
+# Github 100MByte Limit Hook
 
-VScodeで一度でも開いたGitリポジトリであれば、.git/hooks/pre-commit のファイルが存在しないのであれば、.git/hooks/pre-commit ファイルを生成する。
-生成する中身は「100M以上のファイルをコミットしようとすればエラーを出す」というもの。
+VSCodeで一度でも開いたGitリポジトリを開けば、100M以上のファイルをコミットしようとすると事前にエラーが出るようにするための拡張機能。
 
 ## 動作環境
 - MS-Windows (他の環境での動作は未チェック)
@@ -10,12 +9,19 @@ VScodeで一度でも開いたGitリポジトリであれば、.git/hooks/pre-co
 - 拡張機能をインストールするだけで利用可能となります。
 
 ## 挙動内容
-- とても単純で、「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
-  - 存在すれば、次に同様に「現在開いているフォルダ」の「直下」に「.git/hooks/pre-commit」というファイルがあるかどうかチェック
-    - すでに「pre-commit」ファイルが存在する場合は、何もしません。
-    - すでに「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する場合は、何もしません。  
-      - (ほぼ間違いなくLFS (Github Large File Storage) が使われていると思われるため)
-    - 「pre-commit」ファイルが存在しなければ、以下の内容で「.git/hooks/pre-commit」というファイルを作成します。
+とても単純で
+
+### gitリポジトリなのかどうなのかの判定
+「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
+
+### LFS (Github Large File Storage) なリポジトリなのかどうか
+.git/hooks 以下に「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する場合は、何もしない
+
+### pre-commit が既に存在するかどうかの判定
+すでに「pre-commit」ファイルが存在する場合は、何もしない
+
+### pre-commit が存在しない場合
+以下の内容で「.git/hooks/pre-commit」というファイルを作成します。
 
 ```bash
 #!/bin/sh
@@ -34,12 +40,3 @@ else
 fi
 
 ```
-
-## LFS (Github Large File Storage) について
-- vscodeで該当のディレクトリを開くより先に、LFSのリポジトリだった場合は、上記、  
-「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する、に該当するため何もしませんが、
-- 通常のリポジトリを途中でLFSへと移行した場合、あるいはvscodeで先にディレクトリを開いた後で、LFSへと移行した場合は、
-  「*pre-commit*」の中身を見て、上記内容であれば、*削除*してください。
-- LFSリポジトリであれば、「post-checkout」「post-commit」「post-merge」「pre-push」が存在しますので、
-  一度削除されれば、該当のLFSリポジトリに「pre-commit」が作成されることはありません。
-  
