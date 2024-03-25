@@ -42,7 +42,7 @@ fi
 ```
 
 ## マーケットプレイス
-[ithub100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
+[github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
 
