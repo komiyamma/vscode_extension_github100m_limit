@@ -1,0 +1,2 @@
+# vscode_github100mbyteslimithook
+vscode用のExtension。一度でもvscodeで見たgitリポジトリは、100M以上のファイルをコミットするとエラーが出るようにする。
