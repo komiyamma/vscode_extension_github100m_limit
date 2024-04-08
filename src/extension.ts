@@ -66,19 +66,26 @@ function createPreCommit() {
 
                 const scriptContent = `#!/bin/sh
 
-# Check if any file being committed exceeds 100MB
-if [ -f .git/hooks/post-checkout ] && [ -f .git/hooks/post-commit ] && [ -f .git/hooks/post-merge ] && [ -f .git/hooks/pre-push ]; then
-    limit=999999999 # no use
-else
-    limit=104857600 # 100MB in bytes
-    for file in $(git diff --cached --name-only); do
-        file_size=$(stat -c %s "$file")
-        if [ $file_size -gt $limit ]; then
-            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-            exit 1
-        fi
-    done
+toplevel=$(git rev-parse --show-toplevel)
+if [ -z "$toplevel" ]; then
+    exit 0
 fi
+
+if [ -f "$toplevel/.git/hooks/post-checkout" ] && 
+    [ -f "$toplevel/.git/hooks/post-commit" ] &&
+    [ -f "$toplevel/.git/hooks/post-merge" ] &&
+    [ -f "$toplevel/.git/hooks/pre-push" ]; then
+    exit 0
+fi
+
+limit=104857600 # 100MB in bytes
+for file in $(git diff --cached --name-only); do
+    file_size=$(stat -c %s "$file")
+    if [ $file_size -gt $limit ]; then
+        echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+        exit 1
+    fi
+done
 `;
                 fs.writeFileSync(preCommitFilePath, scriptContent);
                 return true;

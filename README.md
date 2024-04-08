@@ -26,18 +26,26 @@ GitリポジトリフォルダをVSCodeで開いたタイミングで、自動�
 ```bash
 #!/bin/sh
 
-if [ -f .git/hooks/post-checkout ] && [ -f .git/hooks/post-commit ] && [ -f .git/hooks/post-merge ] && [ -f .git/hooks/pre-push ]; then
-    limit=999999999 # no use
-else
-    limit=104857600 # 100MB in bytes
-    for file in $(git diff --cached --name-only); do
-        file_size=$(stat -c %s "$file")
-        if [ $file_size -gt $limit ]; then
-            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-            exit 1
-        fi
-    done
+toplevel=$(git rev-parse --show-toplevel)
+if [ -z "$toplevel" ]; then
+    exit 0
 fi
+
+if [ -f "$toplevel/.git/hooks/post-checkout" ] && 
+    [ -f "$toplevel/.git/hooks/post-commit" ] &&
+    [ -f "$toplevel/.git/hooks/post-merge" ] &&
+    [ -f "$toplevel/.git/hooks/pre-push" ]; then
+    exit 0
+fi
+
+limit=104857600 # 100MB in bytes
+for file in $(git diff --cached --name-only); do
+    file_size=$(stat -c %s "$file")
+    if [ $file_size -gt $limit ]; then
+        echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+        exit 1
+    fi
+done
 
 ```
 
@@ -45,6 +53,10 @@ fi
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.3.4
+
+pre-commitファイルについて、「カレントディレクトリ」が「リポジトリのルート」でなくても機能するように対応
 
 ## 1.3.3
 
