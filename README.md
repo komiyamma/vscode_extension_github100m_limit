@@ -1,3 +1,7 @@
+[![Github 100MByte Limit Hook v1.3.4](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.3.4-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
+
 # Github 100MByte Limit Hook
 
 GitリポジトリフォルダをVSCodeで開いたタイミングで、自動的に、100M以上のファイルをコミットしようとすると事前にエラーが出るように設定するための拡張機能。
