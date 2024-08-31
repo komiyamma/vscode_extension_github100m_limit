@@ -1,4 +1,4 @@
-[![Github 100MByte Limit Hook v1.3.4](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.3.4-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Github 100MByte Limit Hook v1.3.5](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.3.5-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -61,6 +61,10 @@ done
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.3.5
+
+説明文の修正
 
 ## 1.3.4
 
