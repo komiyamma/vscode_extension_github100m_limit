@@ -3,7 +3,7 @@
   "name": "github100mbyteslimithook",
   "displayName": "Github 100MBytes Limit Hook",
   "description": "Gitにコミットする際、ファイルサイズが100Mを超えている場合、エラーで自動的にコミットをキャンセルします。",
-  "version": "1.3.6",
+  "version": "1.3.8",
   "engines": {
     "vscode": "^1.87.0"
   },
