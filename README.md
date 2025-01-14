@@ -1,4 +1,4 @@
-[![Github 100MByte Limit Hook v1.3.8](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.3.8-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Github 100MByte Limit Hook v1.4.0](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.0-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -49,11 +49,14 @@ fi
 limit=104857600 # 100MB in bytes
 git diff --cached --name-only | while IFS= read -r file; do
     file_size=$(stat -c %s "$file" 2>/dev/null)
-    if [ "$file_size" -gt "$limit" ]; then
-        echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-        exit 1
+    if [ -n "$file_size" ]; then
+        if [ "$file_size" -gt "$limit" ]; then
+            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+            exit 1
+        fi
     fi
 done
+
 
 ```
 
@@ -61,6 +64,10 @@ done
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.4.0
+
+何らかの原因でファイルサイズが取得できなかった場合に標準エラーに出力してしまう問題を修正
 
 ## 1.3.9
 

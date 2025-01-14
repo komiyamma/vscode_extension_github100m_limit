@@ -59,7 +59,7 @@ if [ -z "$toplevel" ]; then
     exit 0
 fi
 
-if [ -f "$toplevel/.git/hooks/post-checkout" ] && 
+if [ -f "$toplevel/.git/hooks/post-checkout" ] &&
     [ -f "$toplevel/.git/hooks/post-commit" ] &&
     [ -f "$toplevel/.git/hooks/post-merge" ] &&
     [ -f "$toplevel/.git/hooks/pre-push" ]; then
@@ -69,9 +69,11 @@ fi
 limit=104857600 # 100MB in bytes
 git diff --cached --name-only | while IFS= read -r file; do
     file_size=$(stat -c %s "$file" 2>/dev/null)
-    if [ "$file_size" -gt "$limit" ]; then
-        echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-        exit 1
+    if [ -n "$file_size" ]; then
+        if [ "$file_size" -gt "$limit" ]; then
+            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+            exit 1
+        fi
     fi
 done
 `;
