@@ -67,7 +67,7 @@ if [ -f "$toplevel/.git/hooks/post-checkout" ] &&
 fi
 
 limit=104857600 # 100MB in bytes
-git diff --cached --name-only | while IFS= read -r file; do
+git diff --cached --name-only -z | while IFS= read -r -d $'\0' file; do
     file_size=$(stat -c %s "$file" 2>/dev/null)
     if [ -n "$file_size" ]; then
         if [ "$file_size" -gt "$limit" ]; then

@@ -1,4 +1,4 @@
-[![Github 100MByte Limit Hook v1.4.0](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.0-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Github 100MByte Limit Hook v1.4.1](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.1-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -47,7 +47,7 @@ if [ -f "$toplevel/.git/hooks/post-checkout" ] &&
 fi
 
 limit=104857600 # 100MB in bytes
-git diff --cached --name-only | while IFS= read -r file; do
+git diff --cached --name-only -z | while IFS= read -r -d $'\0' file; do
     file_size=$(stat -c %s "$file" 2>/dev/null)
     if [ -n "$file_size" ]; then
         if [ "$file_size" -gt "$limit" ]; then
@@ -64,6 +64,10 @@ done
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.4.1
+
+- 100Mを超えるファイルがマルチバイトを含むファイル名(=gitコマンドでエスケープされてしまう)である際に、正しくファイルサイズがチェックできない問題の修正
 
 ## 1.4.0
 
