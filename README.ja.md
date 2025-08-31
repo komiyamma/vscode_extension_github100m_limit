@@ -1,4 +1,4 @@
-[English Version](README.md)
+[To English Version README](README.md)
 
 [![Github 100MByte Limit Hook v1.4.1](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.1-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
@@ -66,6 +66,10 @@ done
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.4.2
+
+- 英語版のREADMEを追加
 
 ## 1.4.1
 
