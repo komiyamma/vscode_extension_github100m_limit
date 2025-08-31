@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.5
+
+- Fixed an issue with the version badge.
+
 ## 1.4.3
 
 - Added an English version of the README.
