@@ -1,1 +1,163 @@
-(()=>{"use strict";var e={265:function(e,t,i){var o=this&&this.__createBinding||(Object.create?function(e,t,i,o){void 0===o&&(o=i);var n=Object.getOwnPropertyDescriptor(t,i);n&&!("get"in n?!t.__esModule:n.writable||n.configurable)||(n={enumerable:!0,get:function(){return t[i]}}),Object.defineProperty(e,o,n)}:function(e,t,i,o){void 0===o&&(o=i),e[o]=t[i]}),n=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),s=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)"default"!==i&&Object.prototype.hasOwnProperty.call(e,i)&&o(t,e,i);return n(t,e),t};Object.defineProperty(t,"__esModule",{value:!0}),t.deactivate=t.activate=void 0;const r=s(i(398)),c=s(i(896));t.activate=function(e){console.log('Congratulations, your extension "github100mbyteslimithook" is now active!');let t=r.commands.registerCommand("github100mbyteslimithook.initializeCommand",(()=>{}));r.workspace.onDidOpenTextDocument((e=>{e.fileName,function(){if(r.workspace.workspaceFolders){let e=r.workspace.workspaceFolders?.[0];if(e){let t=e.uri,i=t.fsPath+"/.git/config";if(!c.existsSync(i))return!1;let o=t.fsPath+"/.git/hooks/post-checkout",n=t.fsPath+"/.git/hooks/post-commit",s=t.fsPath+"/.git/hooks/post-merge",r=t.fsPath+"/.git/hooks/pre-push";if(c.existsSync(o)&&c.existsSync(n)&&c.existsSync(s)&&c.existsSync(r))return!1;let l=t.fsPath+"/.git/hooks/pre-commit";if(c.existsSync(l))return!1;{const e='#!/bin/sh\n\ntoplevel=$(git rev-parse --show-toplevel)\nif [ -z "$toplevel" ]; then\n    exit 0\nfi\n\nif [ -f "$toplevel/.git/hooks/post-checkout" ] &&\n    [ -f "$toplevel/.git/hooks/post-commit" ] &&\n    [ -f "$toplevel/.git/hooks/post-merge" ] &&\n    [ -f "$toplevel/.git/hooks/pre-push" ]; then\n    exit 0\nfi\n\nlimit=104857600 # 100MB in bytes\ngit diff --cached --name-only -z | while IFS= read -r -d $\'\0\' file; do\n    file_size=$(stat -c %s "$file" 2>/dev/null)\n    if [ -n "$file_size" ]; then\n        if [ "$file_size" -gt "$limit" ]; then\n            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."\n            exit 1\n        fi\n    fi\ndone\n';c.writeFileSync(l,e)}}}}()})),e.subscriptions.push(t)},t.deactivate=function(){}},398:e=>{e.exports=require("vscode")},896:e=>{e.exports=require("fs")}},t={},i=function i(o){var n=t[o];if(void 0!==n)return n.exports;var s=t[o]={exports:{}};return e[o].call(s.exports,s,s.exports,i),s.exports}(265);module.exports=i})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
+/* 0 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.deactivate = exports.activate = void 0;
+const vscode = __importStar(__webpack_require__(1));
+const fs = __importStar(__webpack_require__(2));
+function activate(context) {
+    console.log('Congratulations, your extension "github100mbyteslimithook" is now active!');
+    let disposable = vscode.commands.registerCommand('github100mbyteslimithook.initializeCommand', () => {
+        // vscode.window.showInformationMessage('Hello World from Github100MBytesLimiterHook!');
+    });
+    // ワークスペース内のテキストドキュメントが開かれたときに呼び出されるコールバック
+    vscode.workspace.onDidOpenTextDocument((event) => {
+        // 開かれたファイルのパスを取得
+        const fileName = event.fileName;
+        // vscode.window.showInformationMessage('ディレクトリが開かれました: ' + fileName);
+        // gitリポジトリのディレクトリかどうかを判定
+        // ここでfileNameに対する判定ロジックを実装
+        createPreCommit();
+    });
+    context.subscriptions.push(disposable);
+}
+exports.activate = activate;
+function createPreCommit() {
+    let workspaceFolders = vscode.workspace.workspaceFolders;
+    if (workspaceFolders) {
+        let activeFolder = vscode.workspace.workspaceFolders?.[0];
+        if (activeFolder) {
+            let activeFolderUri = activeFolder.uri;
+            let configFilePath = activeFolderUri.fsPath + '/.git/config';
+            if (!fs.existsSync(configFilePath)) {
+                // vscode.window.showInformationMessage("Configが無い");
+                return false;
+            }
+            let postCheckoutFilePath = activeFolderUri.fsPath + '/.git/hooks/post-checkout';
+            let postCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/post-commit';
+            let postMergeFilePath = activeFolderUri.fsPath + '/.git/hooks/post-merge';
+            let prePushFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-push';
+            // これはLFSで初期化されている
+            if (fs.existsSync(postCheckoutFilePath) && fs.existsSync(postCommitFilePath) && fs.existsSync(postMergeFilePath) && fs.existsSync(prePushFilePath)) {
+                return false;
+            }
+            let preCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-commit';
+            if (fs.existsSync(preCommitFilePath)) {
+                // vscode.window.showInformationMessage('pre-commitファイル発見!!: ' + preCommitFilePath);
+                return false;
+            }
+            else {
+                // vscode.window.showErrorMessage('pre-commitファイルなし!! 作成できる!!: ' + preCommitFilePath);
+                const scriptContent = `#!/bin/sh
+
+toplevel=$(git rev-parse --show-toplevel)
+if [ -z "$toplevel" ]; then
+    exit 0
+fi
+
+if [ -f "$toplevel/.git/hooks/post-checkout" ] &&
+    [ -f "$toplevel/.git/hooks/post-commit" ] &&
+    [ -f "$toplevel/.git/hooks/post-merge" ] &&
+    [ -f "$toplevel/.git/hooks/pre-push" ]; then
+    exit 0
+fi
+
+limit=104857600 # 100MB in bytes
+git diff --cached --name-only -z | while IFS= read -r -d $'\0' file; do
+    file_size=$(stat -c %s "$file" 2>/dev/null)
+    if [ -n "$file_size" ]; then
+        if [ "$file_size" -gt "$limit" ]; then
+            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
+            exit 1
+        fi
+    fi
+done
+`;
+                fs.writeFileSync(preCommitFilePath, scriptContent);
+                return true;
+            }
+        }
+    }
+}
+// This method is called when your extension is deactivated
+function deactivate() { }
+exports.deactivate = deactivate;
+
+
+/***/ }),
+/* 1 */
+/***/ ((module) => {
+
+module.exports = require("vscode");
+
+/***/ }),
+/* 2 */
+/***/ ((module) => {
+
+module.exports = require("fs");
+
+/***/ })
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
+//# sourceMappingURL=extension.js.map
