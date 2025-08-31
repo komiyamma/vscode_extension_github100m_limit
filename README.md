@@ -1,35 +1,37 @@
+[Japanese Version](README.ja.md)
+
 [![Github 100MByte Limit Hook v1.4.1](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.1-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
 # Github 100MByte Limit Hook
 
-Git(ローカル)リポジトリに100MBを超えるファイルをコミットしようとした際に、自動的にエラーメッセージを表示し、コミットをキャンセルする拡張機能です。
+This extension automatically displays an error message and cancels the commit when you try to commit a file larger than 100MB to a Git (local) repository.
 
-この拡張機能は、該当するリポジトリのフォルダをVSCodeで開いた際に自動的に設定されます。  
-これにより、誤って100Mを超える巨大なファイルをコミットしてしまうことを防ぎ、  
-「Github(サーバー)へのプッシュ時に巨大ファイルをコミットしていたことに気づき一大事」といったことを事前に防止できます。
+The extension is automatically configured when you open the relevant repository folder in VSCode.  
+This prevents you from accidentally committing huge files over 100MB,  
+and helps you avoid the situation where you only notice the large file when pushing to Github (server).
 
-## 動作環境
-- MS-Windows (他の環境での動作は未チェック)
+## Supported Environment
+- MS-Windows (Operation on other environments is untested)
 
-## 使い方
-- 拡張機能をインストールするだけで利用可能となります。
+## Usage
+- Just install the extension to use it.
 
-## 挙動内容
-とても単純で
+## Behavior
+Very simple:
 
-- gitリポジトリなのかどうなのかの判定  
-「現在開いているフォルダ」の「直下」に「.git/config」というファイルがあるかどうかチェック
+- Check if the folder is a git repository  
+Checks if there is a `.git/config` file directly under the "currently opened folder".
 
-- LFS (Github Large File Storage) リポジトリなのかどうなのかの判定  
-.git/hooks 以下に「post-checkout」「post-commit」「post-merge」「pre-push」の「４ファイル全て」が存在する場合は、何もしない
+- Check if it is an LFS (Github Large File Storage) repository  
+If all four files "post-checkout", "post-commit", "post-merge", and "pre-push" exist under `.git/hooks`, do nothing.
 
-- pre-commit が既に存在するかどうかの判定  
-すでに「pre-commit」ファイルが存在する場合は、何もしない
+- Check if "pre-commit" already exists  
+If the "pre-commit" file already exists, do nothing.
 
-- pre-commit が存在しない場合  
-以下の内容で「.git/hooks/pre-commit」というファイルを作成
+- If "pre-commit" does not exist  
+Create a file named `.git/hooks/pre-commit` with the following content:
 
 ```bash
 #!/bin/sh
@@ -56,55 +58,43 @@ git diff --cached --name-only -z | while IFS= read -r -d $'\0' file; do
         fi
     fi
 done
-
-
 ```
 
-## マーケットプレイス
-[github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
+## Marketplace
+Available at [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook).
 
 ## Change Log
 
 ## 1.4.1
 
-- 100Mを超えるファイルがマルチバイトを含むファイル名(=gitコマンドでエスケープされてしまう)である際に、正しくファイルサイズがチェックできない問題の修正
+- Fixed an issue where files with multibyte characters in the filename (which are escaped by the git command) could not have their file size checked correctly if they exceeded 100MB.
 
 ## 1.4.0
 
-何らかの原因でファイルサイズが取得できなかった場合に標準エラーに出力してしまう問題を修正
+Fixed an issue where, if the file size could not be obtained for some reason, an error was output to standard error.
 
 ## 1.3.9
 
-不具合を修正しきれていなかった問題
+Fixed an issue that was not completely resolved previously.
 
 ## 1.3.8
 
-ファイルに空白スペースがある場合に、ファイルサイズのチェックが正しく動作しない問題を修正
+Fixed an issue where the file size check did not work correctly if the file name contained spaces.
 
 ## 1.3.5
 
-説明文の修正
+Revised the description.
 
 ## 1.3.4
 
-pre-commitファイルについて、「カレントディレクトリ」が「リポジトリのルート」でなくても機能するように対応
+Updated the pre-commit file to work even if the "current directory" is not the "repository root".
 
 ## 1.3.3
 
-リポジトリのアドレスの変更
+Changed the repository address.
 
 ## 1.3.2
 
-アイコン作成
+Created an icon.
 
 ## 1.2.0
-
-Readme.mdで改行されていなかっため改修
-
-## 1.1.0
-
-マーケットプレイスへの公開版
-
-## 1.1.0
-
-試験的な初版
