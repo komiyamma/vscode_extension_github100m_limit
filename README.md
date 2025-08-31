@@ -1,6 +1,6 @@
 [To Japanese Version README](README.ja.md)
 
-[![Github 100MByte Limit Hook v1.4.1](https://img.shields.io/badge/Github_100MByte_Limit_Hook-v1.4.1-6479ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/komiyamma.github100mbyteslimithook.svg?color=4094ff)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -65,7 +65,7 @@ Available at [github100mbyteslimithook](https://marketplace.visualstudio.com/ite
 
 ## Change Log
 
-## 1.4.3
+## 1.4.4
 
 - Added an English version of the README.
 
