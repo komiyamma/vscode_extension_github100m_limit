@@ -253,3 +253,4 @@ paket-files/
 
 # Visual Studio Code files
 .vscode/
+*.vsix
