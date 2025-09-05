@@ -20,7 +20,8 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:/.git/config"
+    "workspaceContains:/.git/config",
+    "onStartupFinished"
   ],
   "license": "MIT",
   "homepage": "https://komiyamma.net/?page=page-vscode-extension-github100m-limit",
@@ -28,6 +29,9 @@
     "type": "git",
     "url": "https://github.com/komiyamma/vscode_extension_github100m_limit"
   },
+  "extensionDependencies": [
+    "vscode.git"
+  ],
   "main": "./dist/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run package",

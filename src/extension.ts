@@ -2,42 +2,27 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-    // console.log('Congratulations, your extension "github100mbyteslimithook" is now active!');
-
-    // Run when any text document opens (keeps existing trigger behavior)
-    const openListener = vscode.workspace.onDidOpenTextDocument(() => {
-        void createPreCommit(context);
-    });
-    context.subscriptions.push(openListener);
+    // Prefer Git extension callbacks over document-open scanning
+    void wireWithGitExtension(context);
 }
 
-async function createPreCommit(context: vscode.ExtensionContext) {
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders) {
-        return false;
-    }
-
-    const activeFolder = workspaceFolders[0];
-    if (!activeFolder) {
-        return false;
-    }
-
-    const activeFolderUri = activeFolder.uri;
-    const configFilePath = activeFolderUri.fsPath + '/.git/config';
+// Ensure pre-commit hook exists for a given repository root
+async function ensurePreCommitForRoot(context: vscode.ExtensionContext, rootUri: vscode.Uri) {
+    const configFilePath = rootUri.fsPath + '/.git/config';
     if (!fs.existsSync(configFilePath)) {
         return false;
     }
 
-    const postCheckoutFilePath = activeFolderUri.fsPath + '/.git/hooks/post-checkout';
-    const postCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/post-commit';
-    const postMergeFilePath = activeFolderUri.fsPath + '/.git/hooks/post-merge';
-    const prePushFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-push';
+    const postCheckoutFilePath = rootUri.fsPath + '/.git/hooks/post-checkout';
+    const postCommitFilePath = rootUri.fsPath + '/.git/hooks/post-commit';
+    const postMergeFilePath = rootUri.fsPath + '/.git/hooks/post-merge';
+    const prePushFilePath = rootUri.fsPath + '/.git/hooks/pre-push';
     // If LFS hooks exist, skip
     if (fs.existsSync(postCheckoutFilePath) && fs.existsSync(postCommitFilePath) && fs.existsSync(postMergeFilePath) && fs.existsSync(prePushFilePath)) {
         return false;
     }
 
-    const hooksDirPath = activeFolderUri.fsPath + '/.git/hooks';
+    const hooksDirPath = rootUri.fsPath + '/.git/hooks';
     const preCommitFilePath = hooksDirPath + '/pre-commit';
     if (fs.existsSync(preCommitFilePath)) {
         return false;
@@ -52,12 +37,19 @@ async function createPreCommit(context: vscode.ExtensionContext) {
         const scriptContent = await vscode.workspace.fs.readFile(hookUri);
         fs.writeFileSync(preCommitFilePath, scriptContent);
 
+        const lang2 = (vscode.env.language || '').toLowerCase();
+        const isJa2 = (lang2 === 'ja' || lang2.startsWith('ja-'));
+        const msg = isJa2
+            ? 'Github 100MB 制限フックを有効化しました'
+            : 'Github 100MB Limit Hook enabled';
+        vscode.window.setStatusBarMessage(msg, 3000);
+
         const lang = (vscode.env.language || '').toLowerCase();
         const isJa = (lang === 'ja' || lang.startsWith('ja-'));
         const infoMsg = isJa
-            ? 'Github 100MB リミットフックを有効化しました (.git/hooks/pre-commit)'
+            ? 'Github 100MB 制限フックを有効化しました (.git/hooks/pre-commit)'
             : 'Github 100MB Limit Hook enabled (.git/hooks/pre-commit)';
-        vscode.window.showInformationMessage(infoMsg);
+        // vscode.window.showInformationMessage(infoMsg);
         return true;
     } catch (err: any) {
         const code = (err && err.code) ? String(err.code) : 'UNKNOWN';
@@ -66,8 +58,41 @@ async function createPreCommit(context: vscode.ExtensionContext) {
         const errorMsg = isJa
             ? `フックの作成に失敗しました: ${preCommitFilePath} (${code})`
             : `Failed to create hook: ${preCommitFilePath} (${code})`;
-        vscode.window.showErrorMessage(errorMsg);
+        // vscode.window.showErrorMessage(errorMsg);
         return false;
+    }
+}
+
+async function wireWithGitExtension(context: vscode.ExtensionContext) {
+    try {
+        const gitExt = vscode.extensions.getExtension<any>('vscode.git');
+        const api = gitExt?.exports?.getAPI?.(1);
+        if (!api) {
+            return;
+        }
+
+        // Ensure for already-open repositories
+        for (const repo of api.repositories as Array<{ rootUri: vscode.Uri }>) {
+            void ensurePreCommitForRoot(context, repo.rootUri);
+        }
+
+        // When a new repository is opened
+        const openSub = api.onDidOpenRepository?.((repo: { rootUri: vscode.Uri }) => {
+            void ensurePreCommitForRoot(context, repo.rootUri);
+        });
+        if (openSub) {
+            context.subscriptions.push(openSub);
+        }
+
+        // Also respond to added workspace folders only (no full scan)
+        const wsSub = vscode.workspace.onDidChangeWorkspaceFolders((e) => {
+            for (const f of e.added) {
+                void ensurePreCommitForRoot(context, f.uri);
+            }
+        });
+        context.subscriptions.push(wsSub);
+    } catch {
+        // ignore if Git extension is unavailable
     }
 }
 
