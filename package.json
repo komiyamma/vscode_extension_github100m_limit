@@ -29,14 +29,6 @@
     "url": "https://github.com/komiyamma/vscode_extension_github100m_limit"
   },
   "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "github100mbyteslimithook.initializeCommand",
-        "title": "initializeCommand"
-      }
-    ]
-  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",

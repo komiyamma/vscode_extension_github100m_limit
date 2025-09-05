@@ -2,85 +2,72 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
+    // console.log('Congratulations, your extension "github100mbyteslimithook" is now active!');
 
-    console.log('Congratulations, your extension "github100mbyteslimithook" is now active!');
-
-    let disposable = vscode.commands.registerCommand('github100mbyteslimithook.initializeCommand', () => {
-        // vscode.window.showInformationMessage('Hello World from Github100MBytesLimiterHook!');
+    // Run when any text document opens (keeps existing trigger behavior)
+    const openListener = vscode.workspace.onDidOpenTextDocument(() => {
+        void createPreCommit(context);
     });
-
-    // ワークスペース内のテキストドキュメントが開かれたときに呼び出されるコールバック
-    vscode.workspace.onDidOpenTextDocument((event) => {
-        // 開かれたファイルのパスを取得
-        const fileName = event.fileName;
-
-        // vscode.window.showInformationMessage('ディレクトリが開かれました: ' + fileName);
-
-        // gitリポジトリのディレクトリかどうかを判定
-        // ここでfileNameに対する判定ロジックを実装
-
-        createPreCommit();
-    });
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(openListener);
 }
 
-function createPreCommit() {
-    let workspaceFolders = vscode.workspace.workspaceFolders;
-    if (workspaceFolders) {
-        let activeFolder = vscode.workspace.workspaceFolders?.[0];
+async function createPreCommit(context: vscode.ExtensionContext) {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders) {
+        return false;
+    }
 
-        if (activeFolder) {
-            let activeFolderUri = activeFolder.uri;
-            let configFilePath = activeFolderUri.fsPath + '/.git/config';
-            if (!fs.existsSync(configFilePath)) {
-                // vscode.window.showInformationMessage("Configが無い");
-                return false;
-            }
-            let postCheckoutFilePath = activeFolderUri.fsPath + '/.git/hooks/post-checkout';
-            let postCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/post-commit';
-            let postMergeFilePath = activeFolderUri.fsPath + '/.git/hooks/post-merge';
-            let prePushFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-push';
-            // これはLFSで初期化されている
-            if (fs.existsSync(postCheckoutFilePath) && fs.existsSync(postCommitFilePath) && fs.existsSync(postMergeFilePath) && fs.existsSync(prePushFilePath)) {
-                return false;
-            }
+    const activeFolder = workspaceFolders[0];
+    if (!activeFolder) {
+        return false;
+    }
 
-            let preCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-commit';
-            if (fs.existsSync(preCommitFilePath)) {
-                // vscode.window.showInformationMessage('pre-commitファイル発見!!: ' + preCommitFilePath);
-                return false;
-            } else {
-                // vscode.window.showErrorMessage('pre-commitファイルなし!! 作成できる!!: ' + preCommitFilePath);
+    const activeFolderUri = activeFolder.uri;
+    const configFilePath = activeFolderUri.fsPath + '/.git/config';
+    if (!fs.existsSync(configFilePath)) {
+        return false;
+    }
 
-                const scriptContent = `#!/bin/sh
+    const postCheckoutFilePath = activeFolderUri.fsPath + '/.git/hooks/post-checkout';
+    const postCommitFilePath = activeFolderUri.fsPath + '/.git/hooks/post-commit';
+    const postMergeFilePath = activeFolderUri.fsPath + '/.git/hooks/post-merge';
+    const prePushFilePath = activeFolderUri.fsPath + '/.git/hooks/pre-push';
+    // If LFS hooks exist, skip
+    if (fs.existsSync(postCheckoutFilePath) && fs.existsSync(postCommitFilePath) && fs.existsSync(postMergeFilePath) && fs.existsSync(prePushFilePath)) {
+        return false;
+    }
 
-toplevel=$(git rev-parse --show-toplevel)
-if [ -z "$toplevel" ]; then
-    exit 0
-fi
+    const hooksDirPath = activeFolderUri.fsPath + '/.git/hooks';
+    const preCommitFilePath = hooksDirPath + '/pre-commit';
+    if (fs.existsSync(preCommitFilePath)) {
+        return false;
+    }
 
-if [ -f "$toplevel/.git/hooks/post-checkout" ] &&
-    [ -f "$toplevel/.git/hooks/post-commit" ] &&
-    [ -f "$toplevel/.git/hooks/post-merge" ] &&
-    [ -f "$toplevel/.git/hooks/pre-push" ]; then
-    exit 0
-fi
-
-limit=104857600 # 100MB in bytes
-git diff --cached --name-only -z | while IFS= read -r -d $'\0' file; do
-    file_size=$(stat -c %s "$file" 2>/dev/null)
-    if [ -n "$file_size" ]; then
-        if [ "$file_size" -gt "$limit" ]; then
-            echo "Error: Cannot commit a file larger than 100 MB. Abort commit."
-            exit 1
-        fi
-    fi
-done
-`;
-                fs.writeFileSync(preCommitFilePath, scriptContent);
-                return true;
-            }
+    try {
+        if (!fs.existsSync(hooksDirPath)) {
+            fs.mkdirSync(hooksDirPath, { recursive: true });
         }
+
+        const hookUri = vscode.Uri.joinPath(context.extensionUri, 'resources', 'pre-commit-hook.sh');
+        const scriptContent = await vscode.workspace.fs.readFile(hookUri);
+        fs.writeFileSync(preCommitFilePath, scriptContent);
+
+        const lang = (vscode.env.language || '').toLowerCase();
+        const isJa = (lang === 'ja' || lang.startsWith('ja-'));
+        const infoMsg = isJa
+            ? 'Github 100MB リミットフックを有効化しました (.git/hooks/pre-commit)'
+            : 'Github 100MB Limit Hook enabled (.git/hooks/pre-commit)';
+        vscode.window.showInformationMessage(infoMsg);
+        return true;
+    } catch (err: any) {
+        const code = (err && err.code) ? String(err.code) : 'UNKNOWN';
+        const lang = (vscode.env.language || '').toLowerCase();
+        const isJa = (lang === 'ja' || lang.startsWith('ja-'));
+        const errorMsg = isJa
+            ? `フックの作成に失敗しました: ${preCommitFilePath} (${code})`
+            : `Failed to create hook: ${preCommitFilePath} (${code})`;
+        vscode.window.showErrorMessage(errorMsg);
+        return false;
     }
 }
 
