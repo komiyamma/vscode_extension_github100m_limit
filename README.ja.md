@@ -1,6 +1,6 @@
 [To English Version README](README.md)
 
-[![Version](https://img.shields.io/badge/version-v1.4.4-4094ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Version](https://img.shields.io/badge/version-v1.4.6-4094ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -66,6 +66,12 @@ done
 [github100mbyteslimithook](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook) で公開されています。
 
 ## Change Log
+
+## 1.4.6
+
+- VS Code の Git 拡張 API を利用して、リポジトリの検出/オープン時にフックを設定するようにリファクタリング。不要なチェックを減らしパフォーマンスを改善。
+- UX: フック有効化時はポップアップの代わりにステータスバーへ短いメッセージを表示。
+- Git 拡張 API 利用に合わせて engine / 依存関係を更新。
 
 ## 1.4.4
 

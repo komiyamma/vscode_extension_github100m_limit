@@ -1,6 +1,6 @@
 [To Japanese Version README](README.ja.md)
 
-[![Version](https://img.shields.io/badge/version-v1.4.4-4094ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
+[![Version](https://img.shields.io/badge/version-v1.4.6-4094ff.svg)](https://marketplace.visualstudio.com/items?itemName=komiyamma.github100mbyteslimithook)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![Windows 10|11](https://img.shields.io/badge/Windows-_10_|_11-6479ff.svg?logo=windows&logoColor=white)
 
@@ -65,11 +65,17 @@ Available at [github100mbyteslimithook](https://marketplace.visualstudio.com/ite
 
 ## Change Log
 
+## 1.4.6
+
+- Refactored to use the VS Code Git extension API to detect/open repositories and install the hook when relevant, reducing unnecessary checks and improving performance.
+- UX: Displays a short status bar message when the hook is enabled instead of showing popup dialogs.
+- Updated engine/dependency requirements to align with the Git extension API usage.
+
 ## 1.4.5
 
 - Fixed an issue with the version badge.
 
-## 1.4.4
+## 1.4.3
 
 - Added an English version of the README.
 

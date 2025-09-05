@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.6
+
+- Refactored to use the VS Code Git extension API to detect/open repositories and install the hook when relevant, reducing unnecessary checks and improving performance.
+- UX: Displays a short status bar message when the hook is enabled instead of showing popup dialogs.
+- Updated engine/dependency requirements to align with the Git extension API usage.
+
 ## 1.4.5
 
 - Fixed an issue with the version badge.
