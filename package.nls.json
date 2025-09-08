@@ -1,0 +1,4 @@
+{
+  "displayName": "Github 100MBytes Limit Hook",
+  "description": "When committing to Git, if the file size exceeds 100MB, the commit will be automatically canceled with an error."
+}

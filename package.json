@@ -1,8 +1,8 @@
 {
   "publisher": "komiyamma",
   "name": "github100mbyteslimithook",
-  "displayName": "Github 100MBytes Limit Hook",
-  "description": "When committing to Git, if the file size exceeds 100MB, the commit will be automatically canceled with an error.\nGitにコミットする際、ファイルサイズが100Mを超えている場合、エラーで自動的にコミットをキャンセルします。",
+  "displayName": "%displayName%",
+  "description": "%description%",
   "version": "1.4.6",
   "engines": {
     "vscode": "^1.87.0"
